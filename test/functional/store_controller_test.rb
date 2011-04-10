@@ -6,16 +6,16 @@
 # We make no guarantees that this code is fit for any purpose. 
 # Visit http://www.pragmaticprogrammer.com/titles/rails4 for more book information.
 #---
-class ApplicationController < ActionController::Base
-  protect_from_forgery
+require 'test_helper'
 
-  private
+class StoreControllerTest < ActionController::TestCase
+  test "should get index" do
+    get :index
+    assert_response :success
+    assert_select '#columns #side a', :minimum => 4
+    assert_select '#main .entry', 3
+    assert_select 'h3', 'Programming Ruby 1.9'
+    assert_select '.price', /\$[,\d]+\.\d\d/
+  end
 
-    def current_cart 
-      Cart.find(session[:cart_id])
-    rescue ActiveRecord::RecordNotFound
-      cart = Cart.create
-      session[:cart_id] = cart.id
-      cart
-    end
 end
